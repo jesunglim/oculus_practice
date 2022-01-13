@@ -11,7 +11,11 @@ public class CustomController : MonoBehaviour
     private GameObject controllerInstance;
     private InputDevice availableDevice;
 
+    public bool renderController; // Hand와 Controller 사이를 변경할 변수
+    public GameObject handModel; // 핸드 모델
+    public GameObject handInstance; // 핸드 인스턴스
 
+    private Animator handModelAnimator;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +29,18 @@ public class CustomController : MonoBehaviour
         if (!availableDevice.isValid)
         {
             TryInitialize();
+        }
+
+        if (renderController)
+        {
+            handInstance.SetActive(false);
+            controllerInstance.SetActive(true);
+        }
+        else
+        {
+            handInstance.SetActive(true);
+            controllerInstance.SetActive(false);
+            UpdateHandAnimation();
         }
     }
 
@@ -40,7 +56,20 @@ public class CustomController : MonoBehaviour
         if (devices.Count > 0)
         {
             availableDevice = devices[0];
-            GameObject currentControllerModel = controllerModels.Find(controller => controller.name == availableDevice.name);
+            GameObject currentControllerModel;
+            if (availableDevice.name.Contains("Left"))
+            {
+                currentControllerModel = controllerModels[1];
+            }
+            else if (availableDevice.name.Contains("Right"))
+            {
+                currentControllerModel = controllerModels[2];
+            }
+            else
+            {
+                currentControllerModel = null;
+            }
+
             if (currentControllerModel)
             {
                 controllerInstance = Instantiate(currentControllerModel, transform);
@@ -50,6 +79,30 @@ public class CustomController : MonoBehaviour
                 Debug.LogError("Didn't get suitable controller model");
                 controllerInstance = Instantiate(controllerModels[0], transform);
             }
+
+            handInstance = Instantiate(handModel, transform);
+            handModelAnimator = handInstance.GetComponent<Animator>();
+        }
+    }
+
+    void UpdateHandAnimation()
+    {
+        if(availableDevice.TryGetFeatureValue(CommonUsages.trigger, out float triggerValue))
+        {
+            handModelAnimator.SetFloat("Trigger", triggerValue);
+        }
+        else
+        {
+            handModelAnimator.SetFloat("Trigger", 0);
+        }
+
+        if(availableDevice.TryGetFeatureValue(CommonUsages.grip, out float gripValue))
+        {
+            handModelAnimator.SetFloat("Grip", gripValue);
+        }
+        else 
+        { 
+            handModelAnimator.SetFloat("Grip", 0); 
         }
     }
 }
