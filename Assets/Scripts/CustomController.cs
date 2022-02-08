@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit.UI;
 
 public class CustomController : MonoBehaviour
 {
@@ -13,9 +14,13 @@ public class CustomController : MonoBehaviour
 
     public bool renderController; // Hand와 Controller 사이를 변경할 변수
     public GameObject handModel; // 핸드 모델
-    public GameObject handInstance; // 핸드 인스턴스
+    private  GameObject handInstance; // 핸드 인스턴스
 
     private Animator handModelAnimator;
+
+    public GameObject HandGun;
+
+    bool triggerButton;
 
     // Start is called before the first frame update
     void Start()
@@ -41,6 +46,22 @@ public class CustomController : MonoBehaviour
             handInstance.SetActive(true);
             controllerInstance.SetActive(false);
             UpdateHandAnimation();
+        }
+        if (HandGun != null)
+        {
+            bool menuButtonvalue;
+            if (availableDevice.TryGetFeatureValue(CommonUsages.triggerButton, out menuButtonvalue) && menuButtonvalue)
+            {
+                if(triggerButton == false)
+                {
+                    HandGun.GetComponent<SimpleShoot>().Shoot();
+                    triggerButton = true;
+                }
+            }
+            else
+            {
+                triggerButton = false;
+            }
         }
     }
 

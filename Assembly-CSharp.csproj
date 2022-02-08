@@ -55,6 +55,15 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\CustomController.cs" />
     <Compile Include="Assets\Scripts\MenuUI.cs" />
+    <Compile Include="Assets\DodgeQuest\PlayerController.cs" />
+    <Compile Include="Assets\DodgeQuest\BulletSpawner.cs" />
+    <Compile Include="Assets\DodgeQuest\Bullet.cs" />
+    <Compile Include="Assets\Scripts\PlayerBullet.cs" />
+    <Compile Include="Assets\Nokobot\ModernGuns_Handgun\Demo Assets\SimpleShoot.cs" />
+    <Compile Include="Assets\Scripts\GameManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Nokobot\Modern Guns - Handgun\README.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
